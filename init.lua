@@ -33,6 +33,27 @@ local config = {
     end,
   },
 
+  -- set vim options here (vim.<first_key>.<second_key> =  value)
+  options = {
+    opt = {
+      relativenumber = false, -- sets vim.opt.relativenumber
+      guifont = "JetBrainsMono Nerd Font:h10",
+      listchars = {
+        tab = ">-",
+        space = "·",
+        nbsp = "␣",
+        trail = "•",
+        eol = "¶",
+      },
+      tabstop = 4,
+      shiftwidth = 4,
+    },
+    g = {
+      mapleader = " ", -- sets vim.g.mapleader
+      gitblame_date_format = "%r",
+    },
+  },
+
   -- Default theme configuration
   default_theme = {
     diagnostics_style = { italic = true },
@@ -67,6 +88,122 @@ local config = {
   --   telescope_select = true,
   -- },
 
+  -- Configure plugins
+  plugins = {
+    -- Add plugins, the packer syntax without the "use"
+    init = {
+      -- You can disable default plugins as follows:
+      -- ["goolord/alpha-nvim"] = { disable = true },
+
+      -- You can also add new plugins here as well:
+      -- { "andweeb/presence.nvim" },
+      -- {
+      --   "ray-x/lsp_signature.nvim",
+      --   event = "BufRead",
+      --   config = function()
+      --     require("lsp_signature").setup()
+      --   end,
+      -- },
+      { "f-person/git-blame.nvim" },
+    },
+    -- All other entries override the setup() call for default plugins
+    ["null-ls"] = function(config)
+      local null_ls = require "null-ls"
+      -- Check supported formatters and linters
+      -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/formatting
+      -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/diagnostics
+      config.sources = {
+        -- Set a formatter
+        null_ls.builtins.formatting.stylua,
+        null_ls.builtins.diagnostics.selene,
+        null_ls.builtins.formatting.shfmt,
+        null_ls.builtins.diagnostics.shellcheck,
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.diagnostics.yamllint,
+        null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.isort.with({
+          generator_opts = {
+            command = "isort",
+            args = {
+              "--stdout",
+              "--profile",
+              "black",
+              "--filename",
+              "$FILENAME",
+              "-",
+            },
+            to_stdin = true,
+          },
+        }),
+        null_ls.builtins.diagnostics.mypy,
+        null_ls.builtins.formatting.gofmt,
+        null_ls.builtins.formatting.goimports,
+        null_ls.builtins.diagnostics.golangci_lint,
+      }
+      -- set up null-ls's on_attach function
+      -- config.on_attach = function(client)
+      --   -- NOTE: You can remove this on attach function to disable format on save
+      --   if client.resolved_capabilities.document_formatting then
+      --     vim.api.nvim_create_autocmd("BufWritePre", {
+      --       desc = "Auto format before save",
+      --       pattern = "<buffer>",
+      --       callback = vim.lsp.buf.formatting_sync,
+      --     })
+      --   end
+      -- end
+      return config -- return final config table
+    end,
+    treesitter = {
+      ensure_installed = {
+        "lua",
+        "bash",
+        "json",
+        "yaml",
+        "toml",
+        "markdown",
+        "python",
+        "go",
+        "typescript",
+        "dockerfile",
+      },
+    },
+    -- use mason-lspconfig to configure LSP installations
+    ["mason-lspconfig"] = {
+      ensure_installed = {
+        "sumneko_lua",
+        "bashls",
+        "jsonls",
+        "yamlls",
+        "pyright",
+        "tsserver",
+      },
+    },
+    -- use mason-tool-installer to configure DAP/Formatters/Linter installation
+    ["mason-tool-installer"] = {
+      ensure_installed = {
+        "stylua",
+        "selene",
+        "shfmt",
+        "shellcheck",
+        "prettier",
+        "yamllint",
+      },
+    },
+    packer = {
+      compile_path = vim.fn.stdpath "data" .. "/packer_compiled.lua",
+    },
+  },
+
+  -- LuaSnip Options
+  luasnip = {
+    -- Add paths for including more VS Code style snippets in luasnip
+    vscode_snippet_paths = {},
+    -- Extend filetypes
+    filetype_extend = {
+      -- javascript = { "javascriptreact" },
+    },
+  },
+
   -- CMP Source Priorities
   -- modify here the priorities of default cmp sources
   -- higher value == higher priority
@@ -82,10 +219,88 @@ local config = {
     },
   },
 
+  -- Extend LSP configuration
+  lsp = {
+    -- enable servers that you already have installed without mason
+    servers = {
+      -- "pyright"
+      "gopls"
+    },
+    -- easily add or disable built in mappings added during LSP attaching
+    mappings = {
+      n = {
+        -- ["<leader>lf"] = false -- disable formatting keymap
+      },
+    },
+    -- add to the server on_attach function
+    -- on_attach = function(client, bufnr)
+    -- end,
+
+    -- override the lsp installer server-registration function
+    -- server_registration = function(server, opts)
+    --   require("lspconfig")[server].setup(opts)
+    -- end,
+
+    -- Add overrides for LSP server settings, the keys are the name of the server
+    ["server-settings"] = {
+      -- example for addings schemas to yamlls
+      -- yamlls = {
+      --   settings = {
+      --     yaml = {
+      --       schemas = {
+      --         ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
+      --         ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+      --         ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+      --       },
+      --     },
+      --   },
+      -- },
+    },
+  },
+
   -- Diagnostics configuration (for vim.diagnostics.config({}))
   diagnostics = {
     virtual_text = true,
     underline = true,
+  },
+
+  -- Mapping data with "desc" stored directly by vim.keymap.set().
+  --
+  -- Please use this mappings table to set keyboard mapping since this is the
+  -- lower level configuration and more robust one. (which-key will
+  -- automatically pick-up stored data by this setting.)
+  mappings = {
+    -- first key is the mode
+    n = {
+      -- second key is the lefthand side of the map
+      -- mappings seen under group name "Buffer"
+      ["<leader>bb"] = { "<cmd>tabnew<cr>", desc = "New tab" },
+      ["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Pick to close" },
+      ["<leader>bj"] = { "<cmd>BufferLinePick<cr>", desc = "Pick to jump" },
+      ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
+      -- quick save
+      -- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
+    },
+    t = {
+      -- setting a mapping to false will disable it
+      -- ["<esc>"] = false,
+    },
+  },
+
+  -- Modify which-key registration (Use this with mappings table in the above.)
+  ["which-key"] = {
+    -- Add bindings which show up as group name
+    register_mappings = {
+      -- first key is the mode, n == normal mode
+      n = {
+        -- second key is the prefix, <leader> prefixes
+        ["<leader>"] = {
+          -- third key is the key to bring up next level and its displayed
+          -- group name in which-key top level menu
+          ["b"] = { name = "Buffer" },
+        },
+      },
+    },
   },
 
   -- This function is run last
