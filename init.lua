@@ -224,7 +224,7 @@ local config = {
     -- enable servers that you already have installed without mason
     servers = {
       -- "pyright"
-      "gopls"
+      "gopls",
     },
     -- easily add or disable built in mappings added during LSP attaching
     mappings = {
