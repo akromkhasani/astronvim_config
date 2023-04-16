@@ -8,8 +8,8 @@ return {
       ensure_installed = {
         "bashls",
         "jsonls",
+        "lua_ls",
         "pyright",
-        "sumneko_lua",
         "tsserver",
         "yamlls",
       },
