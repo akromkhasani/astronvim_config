@@ -9,5 +9,8 @@ return {
   --     require("lsp_signature").setup()
   --   end,
   -- },
-  { "f-person/git-blame.nvim" },
+  {
+    "f-person/git-blame.nvim",
+    event = "BufRead",
+  },
 }
