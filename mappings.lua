@@ -25,10 +25,10 @@ return {
     -- toggle invisible characters
     ["<leader>H"] = { "<cmd>set list!<cr>", desc = "Toggle invisible characters" },
     -- tmux navigator
-    ["<C-h>"] = { "<cmd> TmuxNavigateLeft<CR>", "window left" },
-    ["<C-l>"] = { "<cmd> TmuxNavigateRight<CR>", "window right" },
-    ["<C-j>"] = { "<cmd> TmuxNavigateDown<CR>", "window down" },
-    ["<C-k>"] = { "<cmd> TmuxNavigateUp<CR>", "window up" },
+    ["<C-h>"] = { "<cmd> TmuxNavigateLeft<cr>", desc = "window left" },
+    ["<C-l>"] = { "<cmd> TmuxNavigateRight<cr>", desc = "window right" },
+    ["<C-j>"] = { "<cmd> TmuxNavigateDown<cr>", desc = "window down" },
+    ["<C-k>"] = { "<cmd> TmuxNavigateUp<cr>", desc = "window up" },
   },
   t = {
     -- setting a mapping to false will disable it
