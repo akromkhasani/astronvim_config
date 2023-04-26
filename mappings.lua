@@ -24,6 +24,11 @@ return {
     -- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
     -- toggle invisible characters
     ["<leader>H"] = { "<cmd>set list!<cr>", desc = "Toggle invisible characters" },
+    -- tmux navigator
+    ["<C-h>"] = { "<cmd> TmuxNavigateLeft<CR>", "window left" },
+    ["<C-l>"] = { "<cmd> TmuxNavigateRight<CR>", "window right" },
+    ["<C-j>"] = { "<cmd> TmuxNavigateDown<CR>", "window down" },
+    ["<C-k>"] = { "<cmd> TmuxNavigateUp<CR>", "window up" },
   },
   t = {
     -- setting a mapping to false will disable it
