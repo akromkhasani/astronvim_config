@@ -13,4 +13,8 @@ return {
     "f-person/git-blame.nvim",
     event = "BufRead",
   },
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+  },
 }
