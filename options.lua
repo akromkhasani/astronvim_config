@@ -2,7 +2,7 @@
 return {
   opt = {
     -- set to true or false etc.
-    relativenumber = false, -- sets vim.opt.relativenumber
+    relativenumber = true, -- sets vim.opt.relativenumber
     guifont = "JetBrainsMono Nerd Font:h14",
     number = true, -- sets vim.opt.number
     spell = false, -- sets vim.opt.spell
@@ -17,6 +17,7 @@ return {
     },
     tabstop = 4,
     shiftwidth = 4,
+    cmdheight = 1,
   },
   g = {
     mapleader = " ", -- sets vim.g.mapleader
